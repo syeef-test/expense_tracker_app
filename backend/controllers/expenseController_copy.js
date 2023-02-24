@@ -2,7 +2,7 @@ const Expense = require("../models/expenseModel");
 
 exports.addExpense = async (req, res, next) => {
   try {
-    //console.log(req.body);
+    console.log(req.body);
 
     if (req.body.id) {
       //update expense
@@ -12,25 +12,25 @@ exports.addExpense = async (req, res, next) => {
       const category = req.body.category;
 
       const updateExpense = await Expense.update({
-        exp_amount: exp_amount,
-        desc: desc,
-        category: category
-      }, {
-        where: {
-          id: id
+        exp_amount:exp_amount,
+        desc:desc,
+        category:category
+      },{
+        where:{
+          id:id
         }
       });
 
-      if (updateExpense) {
-        const data = {
-          id: id,
-          exp_amount: exp_amount,
-          desc: desc,
-          category: category
+      if(updateExpense){
+        const data={
+          id:id,
+          exp_amount:exp_amount,
+          desc:desc,
+          category:category
         }
         res.status(200).json({ message: "Data Updated", data: data });
-      } else {
-        res.status(401).json({ message: "Data Not Updated" });
+      }else{
+        res.status(401).json({ message: "Data Not Updated"});
       }
 
 

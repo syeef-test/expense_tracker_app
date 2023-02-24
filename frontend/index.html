@@ -1,81 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expanse Tracker</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    <style>
-        body {
-            padding-top: 50px;
-        }
-        
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expanse Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
-  <body>
-    <div class="container" align="center">
-      <div class="row">
-        <div>
-          <h2>Expense Tracker</h2>
-        </div>
-        <div>
-          <form onsubmit="addExpense(event)" class="form-horizontal">
-            <div class="form-group">
-              <div class="mb-3">
-                <label for="expense_amount">Expense Amount</label>
-                <input
-                  type="number"
-                  name="expense_amount"
-                  id="expense_amount"
-                  required
-                />
-              </div>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+  <style>
+    body {
+      padding-top: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" align="center">
+    <div class="row">
+      <div>
+        <h2>Expense Tracker</h2>
+      </div>
+      <div>
+        <form onsubmit="addExpense(event)" class="form-horizontal">
+          <div class="form-group">
+            <div class="mb-3">
+              <label for="expense_amount">Expense Amount</label>
+              <input type="number" name="expense_amount" id="expense_amount" required />
+              <!-- <input type="hidden" name="edit" id="edit" value="false"/> -->
+              <input type="hidden" name="expenseId" id="expenseId"/>
             </div>
-            <div class="form-group">
-              <div class="mb-3">
-                <label for="desc">Chose Description</label>
-                <input type="text" name="desc" id="desc" required />
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="mb-3">
-                <label for="category">Category</label>
-                <select id="category" name="category">
-                  <option value="fuel">Fuel</option>
-                  <option value="fruits">Fruits</option>
-                  <option value="vegetables">Vegetables</option>
-                  <option value="travel">Travel</option>
-                  <option value="food">Food</option>
-                  <option value="movie">Movie</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="mb-3">
-                <input
-                  class="btn btn-success"
-                  type="submit"
-                  value="Add Expanse"
-                />
-              </div>
-            </div>
-          </form>
-          <div>
-            <ul id="items" class="list-group"></ul>
           </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <label for="desc">Chose Description</label>
+              <input type="text" name="desc" id="desc" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <label for="category">Category</label>
+              <select id="category" name="category">
+                <option value="fuel">Fuel</option>
+                <option value="fruits">Fruits</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="travel">Travel</option>
+                <option value="food">Food</option>
+                <option value="movie">Movie</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="mb-3">
+              <input class="btn btn-success" type="submit" name="button" id="button" value="Add Expanse" />
+            </div>
+          </div>
+        </form>
+        <div>
+          <ul id="items" class="list-group"></ul>
         </div>
       </div>
     </div>
-  </body>
-  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
-  <script>
-    async function addExpense(event) {
-      try {
-        event.preventDefault();
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script>
+  async function addExpense(event) {
+    try {
+      event.preventDefault();
+      //document.getElementById('expenseId').value = id;
+      if (event.target.expenseId.value !== '') {
+        console.log(event.target.expenseId.value);
+        const expenseId = event.target.expenseId.value;
+        const exp_amount = event.target.expense_amount.value;
+        const desc = event.target.desc.value;
+        const category = event.target.category.value;
+        editExpanseRequest(expenseId, exp_amount, desc, category);
+      } else {
         const exp_amount = event.target.expense_amount.value;
         const desc = event.target.desc.value;
         const category = event.target.category.value;
@@ -87,61 +92,120 @@
         };
         //console.log(object);
         const addResponse = await axios.post(
-            "http://127.0.0.1:3000/add_expense",
-            object
+          "http://127.0.0.1:3000/add_expense",
+          object
         );
 
         if (addResponse.status === 201) {
           console.log("data inserted succesfully");
-          console.log(addResponse.data);
+          //console.log(addResponse.data);
           show_on_list(addResponse.data.data);
         } else {
           console.log("data insertion unsuccesfull");
         }
-      } catch (error) {
-        console.log(error);
       }
-    }
 
-    function show_on_list(obj) {
-      try {
-        const parentElem = document.getElementById("items");
-        const childElem = `<li id=${obj.id}>${obj.exp_amount}-${obj.desc}-${obj.category}<button onclick=deleteExpanse('${obj.id}')>Delete</button><button onclick=editExpanse('${obj.id}','${obj.exp_amount}','${obj.desc}','${obj.category}')>Edit</button></li>`;
-        parentElem.innerHTML = parentElem.innerHTML + childElem;
-      } catch (error) {
-        console.log(error);
-      }
-    }
 
-    function delete_expanse_from_list(expanseId) {
-      try {
-        const parentElem = document.getElementById("items");
-        const childElem = document.getElementById(expanseId);
-        parentElem.removeChild(childElem);
-      } catch (error) {
-        console.log(error);
-      }
-    }
 
-    async function deleteExpanse(expanseId) {
-      try {
-        const deleteResponse = await axios.delete(`http://127.0.0.1:3000/delete_expense/${expanseId}`);
-        if (deleteResponse.status === 200) {
-          console.log("data is deleted from backend");
-          delete_expanse_from_list(expanseId);
-        } else {
-          console.log("data is not deleted from backend");
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    async function editExpanse() {
-      try {
-      } catch (error) {
-        console.log(error);
+  function show_on_list(obj) {
+    try {
+      const parentElem = document.getElementById("items");
+      const childElem = `<li id=${obj.id}>${obj.exp_amount}-${obj.desc}-${obj.category}&nbsp<button class="btn btn-danger" onclick=deleteExpanse('${obj.id}')>Delete</button>&nbsp<button class="btn btn-warning" onclick=editExpanse('${obj.id}','${obj.exp_amount}','${obj.desc}','${obj.category}')>Edit</button></li><br><br>`;
+      parentElem.innerHTML = parentElem.innerHTML + childElem;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function delete_expanse_from_list(expanseId) {
+    try {
+      const parentElem = document.getElementById("items");
+      const childElem = document.getElementById(expanseId);
+      parentElem.removeChild(childElem);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function deleteExpanse(expanseId) {
+    try {
+      const deleteResponse = await axios.delete(`http://127.0.0.1:3000/delete_expense/${expanseId}`);
+      if (deleteResponse.status === 200) {
+        console.log("data is deleted from backend");
+        delete_expanse_from_list(expanseId);
+      } else {
+        console.log("data is not deleted from backend");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function editExpanse(id, exp_amount, desc, category) {
+    delete_expanse_from_list(id);
+    document.getElementById('expenseId').value = id;
+    //document.getElementById('edit').value = "true";
+
+    console.log(document.getElementById('expenseId').value);
+    document.getElementById('expense_amount').value = exp_amount;
+    document.getElementById('desc').value = desc;
+    document.getElementById('category').value = category;
+    
+
+  }
+
+  async function editExpanseRequest(id, exp_amount, desc, category) {
+    try {
+      console.log(id,exp_amount,desc,category);
+      const object = {
+        id: id,
+        exp_amount: exp_amount,
+        desc: desc,
+        category: category
+      };
+      const updateExpense = await axios.post('http://127.0.0.1:3000/add_expense', object);
+      if (updateExpense.status === 200) {
+        console.log("data updated succesfully");
+        //console.log(updateExpense.data.data);
+
+          show_on_list(updateExpense.data.data);
+          // document.getElementById('edit').value = "false";
+          document.getElementById(id).value = "";
+          document.getElementById('expenseId').value = "";
+      } else {
+        console.log("data update unsuccesfull");
+      }
+
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const getExpense = await axios.get('http://127.0.0.1:3000/get_all_expense');
+      if (getExpense.status === 200) {
+        console.log("data found");
+        console.log(getExpense.data.data);
+        const dataArray = getExpense.data.data;
+        dataArray.forEach((element) => {
+          show_on_list(element);
+        });
+
+      } else {
+        console.log("data not found");
       }
     }
-  </script>
+    catch (error) {
+      console.log(error);
+    }
+  });
+</script>
+
 </html>
